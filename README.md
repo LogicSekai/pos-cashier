@@ -1,59 +1,151 @@
-<p align="center"><a href="https://laravel.com" target="_blank"><img src="https://raw.githubusercontent.com/laravel/art/master/logo-lockup/5%20SVG/2%20CMYK/1%20Full%20Color/laravel-logolockup-cmyk-red.svg" width="400" alt="Laravel Logo"></a></p>
+# POS Cashier - Multi-Tenant Point of Sales System
 
-<p align="center">
-<a href="https://github.com/laravel/framework/actions"><img src="https://github.com/laravel/framework/workflows/tests/badge.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/dt/laravel/framework" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/v/laravel/framework" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/laravel/framework"><img src="https://img.shields.io/packagist/l/laravel/framework" alt="License"></a>
-</p>
+Aplikasi Multi-Tenant POS (Point of Sales) berbasis Laravel Livewire untuk layanan SaaS. Sistem ini memiliki 2 dashboard utama: **Superadmin** dan **Tenant** dengan manajemen role dan permissions untuk setiap user.
 
-## About Laravel
+## Fitur Utama
 
-Laravel is a web application framework with expressive, elegant syntax. We believe development must be an enjoyable and creative experience to be truly fulfilling. Laravel takes the pain out of development by easing common tasks used in many web projects, such as:
+### Superadmin Dashboard
+- 🔐 **Autentikasi Superadmin** - Login terpisah untuk superadmin
+- 👥 **User Management** - Mengelola user dengan berbagai role (superadmin, admin, dll)
+- 🏢 **Tenant Management** - Membuat, mengelola, dan menghapus tenant
+- 📊 **Dashboard Statistik** - Melihat total tenant dan user
 
-- [Simple, fast routing engine](https://laravel.com/docs/routing).
-- [Powerful dependency injection container](https://laravel.com/docs/container).
-- Multiple back-ends for [session](https://laravel.com/docs/session) and [cache](https://laravel.com/docs/cache) storage.
-- Expressive, intuitive [database ORM](https://laravel.com/docs/eloquent).
-- Database agnostic [schema migrations](https://laravel.com/docs/migrations).
-- [Robust background job processing](https://laravel.com/docs/queues).
-- [Real-time event broadcasting](https://laravel.com/docs/broadcasting).
+### Tenant Dashboard
+- 🔐 **Autentikasi Tenant** - Login terpisah untuk setiap tenant
+- 💰 **POS System** - Sistem kasir untuk transaksi penjualan
+- 📦 **Product Management** - Mengelola produk dengan kategori, harga, dan stok
+- 📂 **Category Management** - Mengelola kategori produk
+- 📈 **Sales Report** - Laporan penjualan dengan filter tanggal
+- 👤 **Role Management** - Role untuk kasir, gudang, dan lainnya
 
-Laravel is accessible, powerful, and provides tools required for large, robust applications.
+## Teknologi
 
-## Learning Laravel
+- **Laravel 12** - PHP Framework
+- **Livewire 3** - Full-stack framework untuk Laravel
+- **Stancl/Tenancy** - Multi-tenancy package
+- **Spatie Laravel Permission** - Role & Permission management
+- **SQLite** - Database (dapat diganti dengan MySQL/PostgreSQL)
 
-Laravel has the most extensive and thorough [documentation](https://laravel.com/docs) and video tutorial library of all modern web application frameworks, making it a breeze to get started with the framework. You can also check out [Laravel Learn](https://laravel.com/learn), where you will be guided through building a modern Laravel application.
+## Instalasi
 
-If you don't feel like reading, [Laracasts](https://laracasts.com) can help. Laracasts contains thousands of video tutorials on a range of topics including Laravel, modern PHP, unit testing, and JavaScript. Boost your skills by digging into our comprehensive video library.
+1. Clone repository
+```bash
+git clone https://github.com/LogicSekai/pos-cashier.git
+cd pos-cashier
+```
 
-## Laravel Sponsors
+2. Install dependencies
+```bash
+composer install
+npm install
+```
 
-We would like to extend our thanks to the following sponsors for funding Laravel development. If you are interested in becoming a sponsor, please visit the [Laravel Partners program](https://partners.laravel.com).
+3. Setup environment
+```bash
+cp .env.example .env
+php artisan key:generate
+```
 
-### Premium Partners
+4. Jalankan migrasi
+```bash
+php artisan migrate
+php artisan migrate --path=database/migrations/tenant
+```
 
-- **[Vehikl](https://vehikl.com)**
-- **[Tighten Co.](https://tighten.co)**
-- **[Kirschbaum Development Group](https://kirschbaumdevelopment.com)**
-- **[64 Robots](https://64robots.com)**
-- **[Curotec](https://www.curotec.com/services/technologies/laravel)**
-- **[DevSquad](https://devsquad.com/hire-laravel-developers)**
-- **[Redberry](https://redberry.international/laravel-development)**
-- **[Active Logic](https://activelogic.com)**
+5. Seed data awal
+```bash
+php artisan db:seed --class=SuperadminSeeder
+```
 
-## Contributing
+6. Jalankan aplikasi
+```bash
+php artisan serve
+```
 
-Thank you for considering contributing to the Laravel framework! The contribution guide can be found in the [Laravel documentation](https://laravel.com/docs/contributions).
+## Login Credentials
 
-## Code of Conduct
+### Superadmin
+- **URL**: `http://localhost:8000/superadmin/login`
+- **Email**: `superadmin@pos.com`
+- **Password**: `password`
 
-In order to ensure that the Laravel community is welcoming to all, please review and abide by the [Code of Conduct](https://laravel.com/docs/contributions#code-of-conduct).
+### Admin
+- **Email**: `admin@pos.com`
+- **Password**: `password`
 
-## Security Vulnerabilities
+## Struktur Database
 
-If you discover a security vulnerability within Laravel, please send an e-mail to Taylor Otwell via [taylor@laravel.com](mailto:taylor@laravel.com). All security vulnerabilities will be promptly addressed.
+### Central Database (untuk Superadmin)
+- `users` - User superadmin dan admin
+- `tenants` - Daftar tenant
+- `domains` - Domain untuk setiap tenant
+- `roles` & `permissions` - Role dan permission management
 
-## License
+### Tenant Database (terpisah untuk setiap tenant)
+- `users` - User tenant (kasir, gudang, dll)
+- `categories` - Kategori produk
+- `products` - Produk
+- `sales` - Transaksi penjualan
+- `sale_items` - Detail item penjualan
+- `roles` & `permissions` - Role tenant-specific
 
-The Laravel framework is open-sourced software licensed under the [MIT license](https://opensource.org/licenses/MIT).
+## Penggunaan
+
+### Membuat Tenant Baru
+1. Login sebagai superadmin
+2. Buka menu "Tenants"
+3. Klik "Create Tenant"
+4. Masukkan nama dan domain (subdomain)
+5. Tenant baru akan otomatis dibuat dengan database terpisah
+
+### Mengelola Produk
+1. Login ke tenant
+2. Buka menu "Products"
+3. Tambah produk dengan kategori, SKU, harga, dan stok
+4. Edit atau hapus produk sesuai kebutuhan
+
+### Transaksi POS
+1. Buka menu "POS"
+2. Cari produk atau pilih dari daftar
+3. Klik produk untuk menambahkan ke cart
+4. Atur jumlah, diskon, dan pajak
+5. Pilih metode pembayaran
+6. Klik "Complete Sale" untuk menyelesaikan transaksi
+
+### Laporan Penjualan
+1. Buka menu "Sales Report"
+2. Filter berdasarkan tanggal
+3. Lihat statistik dan detail transaksi
+
+## Role dan Permissions
+
+### Superadmin Roles
+- `superadmin` - Akses penuh ke semua fitur
+- `admin` - Akses terbatas untuk pengelolaan
+
+### Tenant Roles (Contoh)
+- `owner` - Pemilik tenant
+- `manager` - Manajer toko
+- `cashier` - Kasir
+- `warehouse` - Staff gudang
+
+Anda dapat membuat role custom sesuai kebutuhan menggunakan Spatie Laravel Permission.
+
+## Multi-Tenancy
+
+Sistem menggunakan database terpisah untuk setiap tenant. Setiap tenant memiliki:
+- Database sendiri
+- User dan role terpisah
+- Data produk dan transaksi terisolasi
+
+## Kontribusi
+
+Kontribusi sangat diterima! Silakan buat pull request atau issue untuk perbaikan dan fitur baru.
+
+## Lisensi
+
+[MIT License](LICENSE)
+
+## Support
+
+Untuk pertanyaan atau dukungan, silakan buat issue di repository ini.
