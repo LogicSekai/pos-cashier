@@ -13,10 +13,11 @@ RUN apk add --no-cache \
     nodejs \
     npm \
     nginx \
-    supervisor
+    supervisor \
+    sqlite
 
 # Install PHP extensions
-RUN docker-php-ext-install pdo_mysql mbstring exif pcntl bcmath gd zip
+RUN docker-php-ext-install pdo_mysql pdo_sqlite mbstring exif pcntl bcmath gd zip
 
 # Install Composer
 COPY --from=composer:latest /usr/bin/composer /usr/bin/composer
@@ -31,10 +32,10 @@ COPY composer.json composer.lock ./
 RUN composer install --no-dev --no-scripts --no-autoloader --prefer-dist
 
 # Copy package.json files
-COPY package.json package-lock.json* ./
+COPY package.json ./
 
 # Install Node dependencies
-RUN npm ci --only=production || npm install --only=production
+RUN npm install --only=production
 
 # Copy application files
 COPY . .
@@ -44,6 +45,13 @@ RUN composer dump-autoload --optimize
 
 # Build frontend assets
 RUN npm run build
+
+# Create storage directories
+RUN mkdir -p /var/www/html/storage/framework/cache/data \
+    && mkdir -p /var/www/html/storage/framework/sessions \
+    && mkdir -p /var/www/html/storage/framework/views \
+    && mkdir -p /var/www/html/storage/logs \
+    && mkdir -p /var/www/html/bootstrap/cache
 
 # Set permissions
 RUN chown -R www-data:www-data /var/www/html \

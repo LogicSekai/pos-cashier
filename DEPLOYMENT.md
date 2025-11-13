@@ -25,12 +25,12 @@ sudo sh get-docker.sh
 sudo usermod -aG docker $USER
 
 # Install Docker Compose
-sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
-sudo chmod +x /usr/local/bin/docker-compose
+sudo curl -L "https://github.com/docker/compose/releases/latest/download/docker compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker compose
+sudo chmod +x /usr/local/bin/docker compose
 
 # Verify installation
 docker --version
-docker-compose --version
+docker compose --version
 ```
 
 ### 2. Clone Repository
@@ -154,45 +154,45 @@ cd /path/to/pos-cashier
 ### Start Application
 
 ```bash
-docker-compose up -d
+docker compose up -d
 ```
 
 ### Stop Application
 
 ```bash
-docker-compose down
+docker compose down
 ```
 
 ### View Logs
 
 ```bash
 # All services
-docker-compose logs -f
+docker compose logs -f
 
 # Specific service
-docker-compose logs -f app
+docker compose logs -f app
 ```
 
 ### Execute Commands in Container
 
 ```bash
 # Artisan commands
-docker-compose exec app php artisan migrate
-docker-compose exec app php artisan cache:clear
+docker compose exec app php artisan migrate
+docker compose exec app php artisan cache:clear
 
 # Access container shell
-docker-compose exec app sh
+docker compose exec app sh
 ```
 
 ### Rebuild Containers
 
 ```bash
-docker-compose up -d --build
+docker compose up -d --build
 ```
 
 ## Using with MySQL Database
 
-The default `docker-compose.yml` is configured for MySQL. The setup includes:
+The default `docker compose.yml` is configured for MySQL. The setup includes:
 
 - MySQL 8.0 container
 - Automatic database creation
@@ -211,7 +211,7 @@ DB_CONNECTION=sqlite
 
 2. Use the development compose file:
 ```bash
-docker-compose -f docker-compose.dev.yml up -d
+docker compose -f docker compose.dev.yml up -d
 ```
 
 ## SSL/HTTPS Setup with Nginx Proxy
@@ -241,7 +241,7 @@ docker run -d \
   jrcs/letsencrypt-nginx-proxy-companion
 ```
 
-Then update `docker-compose.yml` to use the proxy:
+Then update `docker compose.yml` to use the proxy:
 
 ```yaml
 services:
@@ -267,10 +267,10 @@ networks:
 
 ```bash
 # MySQL backup
-docker-compose exec db mysqldump -u root -p$DB_ROOT_PASSWORD pos_cashier > backup.sql
+docker compose exec db mysqldump -u root -p$DB_ROOT_PASSWORD pos_cashier > backup.sql
 
 # Restore
-docker-compose exec -T db mysql -u root -p$DB_ROOT_PASSWORD pos_cashier < backup.sql
+docker compose exec -T db mysql -u root -p$DB_ROOT_PASSWORD pos_cashier < backup.sql
 ```
 
 ### Full Backup
@@ -288,7 +288,7 @@ docker run --rm -v pos-cashier_db-data:/data -v $(pwd):/backup alpine tar czf /b
 ### Check Container Status
 
 ```bash
-docker-compose ps
+docker compose ps
 ```
 
 ### Monitor Resource Usage
@@ -300,7 +300,7 @@ docker stats
 ### View Application Logs
 
 ```bash
-docker-compose logs -f app
+docker compose logs -f app
 ```
 
 ## Troubleshooting
@@ -308,38 +308,38 @@ docker-compose logs -f app
 ### Permission Issues
 
 ```bash
-docker-compose exec app chown -R www-data:www-data /var/www/html/storage
-docker-compose exec app chmod -R 755 /var/www/html/storage
+docker compose exec app chown -R www-data:www-data /var/www/html/storage
+docker compose exec app chmod -R 755 /var/www/html/storage
 ```
 
 ### Clear All Caches
 
 ```bash
-docker-compose exec app php artisan cache:clear
-docker-compose exec app php artisan config:clear
-docker-compose exec app php artisan route:clear
-docker-compose exec app php artisan view:clear
+docker compose exec app php artisan cache:clear
+docker compose exec app php artisan config:clear
+docker compose exec app php artisan route:clear
+docker compose exec app php artisan view:clear
 ```
 
 ### Database Connection Issues
 
 ```bash
 # Check if database is running
-docker-compose ps db
+docker compose ps db
 
 # Check database logs
-docker-compose logs db
+docker compose logs db
 
 # Test connection
-docker-compose exec app php artisan tinker
+docker compose exec app php artisan tinker
 >>> DB::connection()->getPdo();
 ```
 
 ### Rebuild Everything
 
 ```bash
-docker-compose down -v
-docker-compose up -d --build
+docker compose down -v
+docker compose up -d --build
 ./docker/scripts/setup.sh
 ```
 

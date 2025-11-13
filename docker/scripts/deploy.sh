@@ -19,11 +19,11 @@ fi
 
 # Stop existing containers
 echo "🛑 Stopping existing containers..."
-docker-compose down
+docker compose down
 
 # Build and start containers
 echo "🏗️  Building and starting containers..."
-docker-compose up -d --build
+docker compose up -d --build
 
 # Wait for database to be ready
 echo "⏳ Waiting for database..."
@@ -31,24 +31,24 @@ sleep 10
 
 # Run migrations
 echo "🔄 Running database migrations..."
-docker-compose exec -T app php artisan migrate --force
+docker compose exec -T app php artisan migrate --force
 
 # Run tenant migrations
 echo "🔄 Running tenant migrations..."
-docker-compose exec -T app php artisan tenants:migrate --force
+docker compose exec -T app php artisan tenants:migrate --force
 
 # Clear caches
 echo "🧹 Clearing caches..."
-docker-compose exec -T app php artisan config:clear
-docker-compose exec -T app php artisan cache:clear
-docker-compose exec -T app php artisan view:clear
-docker-compose exec -T app php artisan route:clear
+docker compose exec -T app php artisan config:clear
+docker compose exec -T app php artisan cache:clear
+docker compose exec -T app php artisan view:clear
+docker compose exec -T app php artisan route:clear
 
 # Optimize application
 echo "⚡ Optimizing application..."
-docker-compose exec -T app php artisan config:cache
-docker-compose exec -T app php artisan route:cache
-docker-compose exec -T app php artisan view:cache
+docker compose exec -T app php artisan config:cache
+docker compose exec -T app php artisan route:cache
+docker compose exec -T app php artisan view:cache
 
 # Clean up
 echo "🧹 Cleaning up old images..."
@@ -56,4 +56,4 @@ docker image prune -f
 
 echo "✅ Deployment completed successfully!"
 echo "📊 Container status:"
-docker-compose ps
+docker compose ps
