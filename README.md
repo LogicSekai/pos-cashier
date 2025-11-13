@@ -28,6 +28,8 @@ Aplikasi Multi-Tenant POS (Point of Sales) berbasis Laravel Livewire untuk layan
 
 ## Instalasi
 
+### Instalasi Lokal (Development)
+
 1. Clone repository
 ```bash
 git clone https://github.com/LogicSekai/pos-cashier.git
@@ -61,6 +63,29 @@ php artisan db:seed --class=SuperadminSeeder
 ```bash
 php artisan serve
 ```
+
+### Instalasi dengan Docker (Production)
+
+1. Clone repository
+```bash
+git clone https://github.com/LogicSekai/pos-cashier.git
+cd pos-cashier
+```
+
+2. Setup environment
+```bash
+cp .env.example .env
+# Edit .env sesuai konfigurasi VPS Anda
+nano .env
+```
+
+3. Jalankan setup script
+```bash
+chmod +x docker/scripts/setup.sh
+./docker/scripts/setup.sh
+```
+
+Untuk panduan deployment lengkap, lihat [DEPLOYMENT.md](DEPLOYMENT.md)
 
 ## Login Credentials
 
@@ -137,6 +162,33 @@ Sistem menggunakan database terpisah untuk setiap tenant. Setiap tenant memiliki
 - Database sendiri
 - User dan role terpisah
 - Data produk dan transaksi terisolasi
+
+## Deployment
+
+### CI/CD dengan GitHub Actions
+
+Proyek ini dilengkapi dengan CI/CD pipeline otomatis menggunakan GitHub Actions untuk deployment ke VPS dengan Docker.
+
+**Fitur CI/CD:**
+- 🔄 Auto-deployment saat push ke branch `master` atau `main`
+- 🐳 Docker containerization untuk konsistensi environment
+- 🚀 Zero-downtime deployment
+- 🔐 Secure deployment via SSH
+- 📦 Automatic database migrations
+- ⚡ Application optimization (cache, routes, views)
+
+**Setup CI/CD:**
+1. Configure GitHub Secrets (lihat [DEPLOYMENT.md](DEPLOYMENT.md))
+2. Push ke branch `master` atau `main`
+3. GitHub Actions akan otomatis build dan deploy ke VPS
+
+**Manual Deployment:**
+```bash
+# Jalankan di VPS
+./docker/scripts/deploy.sh
+```
+
+Untuk panduan lengkap, lihat [DEPLOYMENT.md](DEPLOYMENT.md)
 
 ## Kontribusi
 
